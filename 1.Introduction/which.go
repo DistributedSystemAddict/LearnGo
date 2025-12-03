@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-func main10() {
+func main() {
 	arguments := os.Args
 	if len(arguments) == 1 {
 		fmt.Println("Please provide an argument!")
@@ -14,6 +14,7 @@ func main10() {
 	}
 	file := arguments[1]
 	path := os.Getenv("PATH")
+	println(path)
 	pathSplit := filepath.SplitList(path)
 	for _, directory := range pathSplit {
 		fullPath := filepath.Join(directory, file)
@@ -28,7 +29,7 @@ func main10() {
 
 		if mode&0111 != 0 {
 			fmt.Println(fullPath)
-			return
 		}
 	}
+	os.Exit(1)
 }

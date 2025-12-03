@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func main() {
+func main12() {
 	if len(os.Args) != 1 {
 		log.Fatal("Fatal: Hello World!")
 	}
