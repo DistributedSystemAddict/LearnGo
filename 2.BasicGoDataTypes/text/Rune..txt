@@ -1,0 +1,10 @@
+1) Ngắn gọn trước: rune là gì
+Trong Go, rune là tên alias cho kiểu int32.
+Semantically, rune được dùng để biểu diễn một Unicode code point (một ký tự Unicode về mặt mã điểm).
+Kích thước: 4 bytes (32-bit).
+
+2) Unicode code point, UTF-8 và cách Go lưu string
+Code point: mỗi ký tự Unicode có một số (ví dụ 'A' = U+0041, 'é' = U+00E9, 😊 = U+1F60A). rune lưu số này (ví dụ 65, 233, 128522 tương ứng).
+Go lưu string theo UTF-8: một string là chuỗi các byte theo mã hóa UTF-8. Ký tự đơn (code point) có thể chiếm 1 tới 4 byte trong string.
+Khi anh index s[i] → anh lấy một byte (type byte), không phải một rune.
+

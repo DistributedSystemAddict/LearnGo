@@ -1,0 +1,4 @@
+- strconv.Atoi() - convert a string value into an int value (Atoi stands for ASCII to Int).
+- strconv.Atoi() returns (int, error).
+- Having an error value of nil means that the conversion was successful and that you can use the int value if you want.
+- Having an error value that is not nil means that the conversion was unsuccessful and that the string input is not a valid int value.
