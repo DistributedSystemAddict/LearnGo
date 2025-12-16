@@ -1,0 +1,17 @@
+regExp trong Go là gì?
+Trong Go:
++ regexp là package
++ regexp.Regexp là kiểu dữ liệu
++ regExp (biến) thường là một regex đã compile
+
+Một số ký hiệu regex cơ bản (rất hay dùng)
+Ký hiệu	Ý nghĩa
+.	    1 ký tự bất kỳ
+*	    0 hoặc nhiều lần
++	    1 hoặc nhiều lần
+?	    0 hoặc 1
+^	    Bắt đầu chuỗi
+$	    Kết thúc chuỗi
+\d	    Chữ số
+\w	    chữ + số + _
+[...]	1 trong các ký tự

@@ -1,0 +1,29 @@
+Vì sao cần CSV?
+Ứng dụng không nên mất dữ liệu mỗi lần chạy
+Các cách lưu trữ:
++ Database (phức tạp)
++ Binary file (khó debug)
++ CSV (đơn giản, dễ đọc, dễ sửa) ✅
+➡️ CSV rất phù hợp cho:
++ Tool nhỏ
++ Statistics app
++ Config
++ Log
++ Import / Export
+
+package: import "encoding/csv"
+
+io.Reader & io.Writer (cực kỳ quan trọng)
+Ý tưởng cốt lõi của Go
+Go không quan tâm:
++ dữ liệu từ file
++ từ network
++ từ memory
++ từ buffer
+Miễn là nó đọc được (io.Reader)
+và ghi được (io.Writer)
+
+Ví dụ:
+file, _ := os.Open("data.csv")
+reader := csv.NewReader(file)
++ file implement io.Readercsv.NewReader() chỉ cần Reader, không cần file cụ thể

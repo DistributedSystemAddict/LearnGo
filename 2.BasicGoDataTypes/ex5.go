@@ -10,7 +10,7 @@ import (
 // define reusable sentinel error
 var ErrCustom = errors.New("this is a custom error message")
 
-func check(a, b int) error {
+func check1(a, b int) error {
 	if a == 0 && b == 0 {
 		// wrap ErrCustom using %w for errors.Is()
 		return fmt.Errorf("%w", ErrCustom)
@@ -18,7 +18,7 @@ func check(a, b int) error {
 	return nil
 }
 
-func formattedError(a, b int) error {
+func formattedError1(a, b int) error {
 	if a == 0 && b == 0 {
 		// keep formatting, also wrap the sentinel
 		return fmt.Errorf("a %d and b %d. UserID: %d: %w", a, b, os.Getuid(), ErrCustom)
@@ -27,7 +27,7 @@ func formattedError(a, b int) error {
 }
 
 func main() {
-	err := check(0, 10)
+	err := check1(0, 10)
 	if err == nil {
 		fmt.Println("check() executed normally!")
 	} else {
@@ -35,12 +35,12 @@ func main() {
 	}
 
 	// using errors.Is() instead of err.Error()
-	err = check(0, 0)
+	err = check1(0, 0)
 	if errors.Is(err, ErrCustom) {
 		fmt.Println("Custom error detected!")
 	}
 
-	err = formattedError(0, 0)
+	err = formattedError1(0, 0)
 	if err != nil {
 		// still prints full message
 		fmt.Println(err)
