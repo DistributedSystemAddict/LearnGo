@@ -1,18 +1,20 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
-func concat[T any](a1 []T, a2 []T) []T {
-	result := make([]T, 0, len(a1)+len(a2))
-	result = append(result, a1[:]...)
-	result = append(result, a2[:]...)
+func concat[T any](arr1, arr2 []T) []T {
+	result := make([]T, len(arr1)+len(arr2))
+	copy(result, arr1)
+	copy(result[len(arr1):], arr2)
 	return result
 }
 
 func main() {
-	arr1 := [3]int{1, 2, 3}
-	arr2 := [5]int{4, 5, 6, 7, 8}
+	arr1 := []float64{1.2, 2.3, 3.4}
+	arr2 := []float64{4.5, 5.6, 6.7, 7.8, 8.9}
 
-	result := concat[int](arr1, arr2)
+	result := concat(arr1, arr2)
 	fmt.Printf("Concat from s1: %v, s2: %v to slice: %v", arr1, arr2, result)
 }
