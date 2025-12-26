@@ -1,0 +1,230 @@
+func PrintSlice[T any](s []T) {
+    for _, v := range s {
+        fmt.Println(v)
+    }
+}
+
+
+[T any] - Generic type parameter
+[T any]
++ T là type parameter (kiểu tổng quát)
++ any nghĩa là: 
+    type any = interface{}
++ Tức là T có thể là bất kỳ kiểu dữ liệu nào
+-> Go sẽ quyết định T là kiểu gì tại compile-time.
+
+(s []T) – Tham số hàm
++ s là một slice
++ Mỗi phần tử trong slice có kiểu T
++ Nếu T = int → s là []int
++ Nếu T = string → s là []string
+
+
+func Same[T comparable](a, b T) bool {
+	if a == b {
+		return true
+	}
+
+	return false
+}
+
+- Sử dụng comparable thay vì any. Chứa tất các các kiểu dữ liệu
+có thể so sánh với == và !=
+
+
+
+type Numeric interface {
+    int | int8 | int16 | int32 | int64 | float64
+}
+
+func Add[T Numeric](a, b T) T {
+    return a + b
+}
+
+-  Ở đây ta tạo 1 interface Numeric nó sẽ có 1 list các kiểu
+dữ liệu được hỗ trợ.
+
+
+
+type AnotherInt int
+type AllInts interface {
+	~int
+}
+
+- type AnotherInt int
++ Đây là defined type (kiểu được định nghĩa mới), không phải alias
++ AnotherInt không phải là int
++ Nhưng underpying type của nó là int
+- ~int
++ ~T trong Go generics nghĩa là : any type whose underlying type is T
++ Tất cả các kiểu có underlying là int
+
+
+func f1[S interface{ ~[]E }, E interface{}](x S) int {
+    return len(x)
+}
+func f2[S ~[]E, E interface{}](x S) int {
+    return len(x)
+}
+func f3[S ~[]E, E any](x S) int {
+    return len(x)
+}
+- S interface{ ~[]E } ở đây thì S có interface là slice của các underlying type
+của E = S ~[]E
+- E interface{} là bao gồm tất cả các type = E any
+
+
+Giải thích về UnderlyingType
+- Khái niệm: UnderlyingType của 1 kiểu là kiểu thực sự nằm cuối cùng mà Go runtime
+hiểu và lưu trữ.
++ Mọi defined type (type X Y) đều có underlying type là Y.
++ Underlying type quyết định:
+    + Memory layout
+    + Operations hợp leek (+, len, index, ...)
+    + Sự tương thích với các type khác
+ví dụ 1: type AnotherInt int
++ AnotherInt -> defined type
++ UnderlyingType = int
+Điều này có nghĩa là:
+var a AnotherInt = 5
+var b int = 5
+a = b       // ❌ compile error, different type
+a = AnotherInt(b) // ✅ convert ok
++ Memory layout của a = Memory layout của int
++ Thao tác với AnotherInt vẫn giống int, nuhwng type system coi là khác type
+Ví dụ 2: slice generic
+type TreeLast[T any] []T
++ TreeLast[int] -> underlying type = []int
++ TreeLast[string] -> underlying type = []string
+Điều này cho phép:
++ Attach method cho slice
++ Dùng slice Operations (len, [] index) mà không mất runtime efficiency
+
+
+Slice trong go không phải mảng. Nó là một discriptor:
+Slice {
+    pointer -> underlying array
+    length
+    capacity
+}
+- Value receiver -> copy descriptor
+    + pointer vẫn trỏ tới same underlying array
+    + mutate phần tử: caller nhìn thấy
+    + reassign slice: caller không thấy
+- Pointer receiver -> copy con trỏ tới descriptor
+    + mutate phần tử: caller nhìn thấy
+    + reassign slice: caller cũng thấy
+eg: 
+Value receiver:
+func (t TreeLast[int]) replaceLastValue(x int) {
+    t[len(t)-1] = x         // mutate underlying array -> caller thấy
+    t = append(t, 100)      // reassign descriptor -> caller không thấy
+}
+
+slice := TreeLast[int]{1,2,3}
+slice.replaceLastValue(9)
+fmt.Println(slice) // [1 2 9], append không ảnh hưởng
+
+t đang là descriptor -> cái này là 1 con trỏ trỏ tới underlying array
+
+
+Pointer receiver:
+func (t *TreeLast[int]) replaceLastPointer(x int) {
+    (*t)[len(*t)-1] = x      // mutate underlying array -> caller thấy
+    *t = append(*t, 100)     // reassign slice -> caller cũng thấy
+}
+
+slice := TreeLast[int]{1,2,3}
+slice.replaceLastPointer(9)
+fmt.Println(slice) // [1 2 9 100], cả mutate và append caller đều thấy
+
+t là con trỏ trỏ tới 1 slice caller (trỏ tới 1 descriptor)
+-> *t giải tham chiếu tới 1 descriptot
+
+
+
+
+type node[T any] struct {
+	Data T
+	next *node[T]
+}
+type list[T any] struct {
+	start *node[T]
+}
+func (l *list[T]) add(data T) {
+	n := node[T]{
+		Data: data,
+		next: nil,
+	}
+	if l.start == nil {
+		l.start = &n
+		return
+	}
+	if l.start.next == nil {
+		l.start.next = &n
+		return
+	}
+	temp := l.start
+	l.start = l.start.next
+	l.add(data)
+	l.start = temp
+}
+
+Giải thích cấu trúc dữ liệu Linked List ở golang:
++ Đầu tiên tạo tạo cấu trúc của node
+type node[T any] struct {
+    Data t
+    next *node[T]
+}
+
++ sau đó tạo 1 struct list:
+type list[T any] struct {
+    start *node[T]
+}
+
+- Phân tích hàm add: 
++ check xem nếu l.start là nil -> gán vào start
++ check xem nếu l.next là nil -> gán vào next
++ nếu cả 2 đều khác rỗng: 
+    + đầu tiên gán l.start vào temp: lúc này temp đang là con trỏ trỏ tới l đầu tiên
+    + gán l.start.next vào l.start
+    + ta gọi lại hàm l.add(data) -> lúc này l.start.next -> .next = data
+    + ta lặp lại liên tục cho đến khi nào gặp ví dụ tới 1 node mà node đằng sau nó (next là rỗng thì sẽ return) 
+còn theo tôi nghĩ trường hợp check start là rỗng thì chỉ dành cho việc add data lần đầu thôi
+    + sau khi tiệp được và add, ta phải gán là temp về l.start
+
+
+1. Phân biệt Shallow Copy và Deep Copy trong Slice
+Để hiểu gói slices, trước tiên phải hiểu cách nó sao chép dữ liệu.
+Shallow Copy (Sao chép nông): Chỉ sao chép các giá trị trong "Descriptor" (Header).
+Với slice, nó tạo ra một Header mới nhưng con trỏ Data vẫn trỏ chung vào cùng một mảng vật lý.
+Nếu phần tử bên trong là con trỏ hoặc struct chứa con trỏ, cả bản gốc và bản sao đều dùng chung địa chỉ đó.
+Deep Copy (Sao chép sâu): Tạo ra một bản sao hoàn toàn độc lập.
+Nó cấp phát vùng nhớ mới cho mảng và sao chép từng phần tử một cách đệ quy. Nếu phần tử là một con trỏ, nó sẽ copy cả giá trị mà con trỏ đó trỏ tới, thay vì chỉ copy địa chỉ.
+Lưu ý về slices.Clone(): Trong tài liệu Go, slices.Clone tạo ra một shallow copy của các phần tử. Tuy nhiên, nó tạo ra một mảng vật lý mới.
+Nếu slice là []int, thay đổi s1[i] sẽ không ảnh hưởng s2[i] (vì mảng đã được copy).
+Nếu slice là []*int (slice chứa con trỏ), thay đổi *s1[i] sẽ ảnh hưởng đến *s2[i] vì cả hai vẫn trỏ chung vào một vùng nhớ dữ liệu cuối cùng.
+
+
+2. Các hàm quan trọng trong gói slices
+slices.Clone(s)
+    Hàm này tạo ra một slice mới có cùng các phần tử như bản gốc.
+    Nó cấp phát một mảng vật lý mới. Như ví dụ của bạn: khi s1[2] = 0, s2[2] vẫn giữ nguyên giá trị cũ là -1. Điều này chứng tỏ chúng không còn dùng chung mảng vật lý nữa.
+    slices.Compact(s)
+    Loại bỏ các phần tử trùng nhau nằm liên tiếp.
+    Ví dụ: [1, 1, 2, 2, 1] sẽ thành [1, 2, 1].
+    Nó sửa đổi trực tiếp trên chính slice đó (in-place) để tiết kiệm bộ nhớ và trả về slice mới với độ dài đã thu gọn. Đó là lý do tại sao nó hoạt động hiệu quả nhất trên slice đã được sắp xếp.
+slices.Clip(s)
+    Hàm này cực kỳ hữu ích để tối ưu bộ nhớ.
+    Nó thu hẹp Capacity (sức chứa) về bằng đúng Length (độ dài).
+    Ví dụ: Bạn có một slice len: 10, cap: 100. Sau khi Clip, nó sẽ là len: 10, cap: 10. Phần dư 90 đơn vị bộ nhớ sẽ được giải phóng hoặc sẵn sàng cho việc tái cấp phát của Go.
+slices.Replace(s, i, j, values...)
+    Thay thế một khoảng phần tử từ chỉ số i đến j (không bao gồm j) bằng các giá trị mới.
+    Nó có thể làm tăng hoặc giảm độ dài của slice tùy thuộc vào số lượng giá trị bạn chèn vào.
+slices.Contains(s, v)
+    Trả về true/false nếu giá trị v tồn tại trong slice. Trước Go 1.21, bạn phải tự viết vòng lặp for để kiểm tra việc này.
+slices.Min(s) & slices.Max(s)
+    Tìm giá trị nhỏ nhất và lớn nhất. Hàm này chỉ hoạt động với các kiểu dữ liệu có thể so sánh (Ordered) như số hoặc chuỗi.
+slices.Sort(s)
+    Sắp xếp slice trực tiếp (in-place). Tốc độ rất nhanh vì sử dụng Generics, không tốn chi phí chuyển đổi kiểu dữ liệu như gói sort cũ (interface-based).
+
