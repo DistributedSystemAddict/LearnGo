@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Cannot
 
@@ -22,6 +24,13 @@ func concat3and2[T any](a [3]T, b [2]T) [5]T {
 	copy(result[:], a[:])
 	copy(result[3:], b[:])
 	return result
+}
+
+func concat(a, b []int) []int {
+	res := make([]int, len(a)+len(b))
+	copy(res, a)
+	copy(res[len(a):], b)
+	return res
 }
 
 func main23() {

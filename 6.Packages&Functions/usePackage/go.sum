@@ -1,0 +1,4 @@
+github.com/mactsouk/sqlite06 v0.0.0-20240229194925-33e668a9d0bf h1:abWWlFrMpXx+8CBSRVvp+RAnvNKgLQAmBSWNgBNUC5Q=
+github.com/mactsouk/sqlite06 v0.0.0-20240229194925-33e668a9d0bf/go.mod h1:T04MgNMS16B0w3bb4JqkTOwjUQdcLyegAByOQ3zIXi4=
+github.com/mattn/go-sqlite3 v1.14.34 h1:3NtcvcUnFBPsuRcno8pUtupspG/GM+9nZ88zgJcp6Zk=
+github.com/mattn/go-sqlite3 v1.14.34/go.mod h1:Uh1q+B4BYcTPb+yiD3kU8Ct7aC0hY9fxUwlHK0RXw+Y=

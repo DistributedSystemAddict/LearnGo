@@ -210,7 +210,7 @@ Nếu slice là []*int (slice chứa con trỏ), thay đổi *s1[i] sẽ ảnh h
 slices.Clone(s)
     Hàm này tạo ra một slice mới có cùng các phần tử như bản gốc.
     Nó cấp phát một mảng vật lý mới. Như ví dụ của bạn: khi s1[2] = 0, s2[2] vẫn giữ nguyên giá trị cũ là -1. Điều này chứng tỏ chúng không còn dùng chung mảng vật lý nữa.
-    slices.Compact(s)
+slices.Compact(s)
     Loại bỏ các phần tử trùng nhau nằm liên tiếp.
     Ví dụ: [1, 1, 2, 2, 1] sẽ thành [1, 2, 1].
     Nó sửa đổi trực tiếp trên chính slice đó (in-place) để tiết kiệm bộ nhớ và trả về slice mới với độ dài đã thu gọn. Đó là lý do tại sao nó hoạt động hiệu quả nhất trên slice đã được sắp xếp.

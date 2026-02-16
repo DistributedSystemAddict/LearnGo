@@ -63,7 +63,7 @@ func (l *list[T]) add(data T) {
 	l.start = temp
 }
 
-func main() {
+func main6() {
 	var myList list[int]
 
 	fmt.Println(myList)
