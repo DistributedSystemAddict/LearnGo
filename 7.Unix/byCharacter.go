@@ -7,40 +7,46 @@ import (
 	"os"
 )
 
-func lineByLine(file string) error {
+func charByChar(file string) error {
 	f, err := os.Open(file)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
+
 	r := bufio.NewReader(f)
 	for {
 		line, err := r.ReadString('\n')
 		if err == io.EOF {
 			if len(line) != 0 {
-				fmt.Println(line)
+				for _, x := range line {
+					fmt.Println(string(x))
+				}
 			}
 			break
-		}
-		if err != nil {
-			fmt.Printf("error reading file %s", err)
+		} else if err != nil {
+			fmt.Printf("Error reading file %s", err)
 			return err
 		}
-		fmt.Print(line)
+
+		for _, x := range line {
+			fmt.Println(string(x))
+		}
 	}
 	return nil
 }
-func main1() {
+
+func main3() {
 	args := os.Args
 	if len(args) == 1 {
-		fmt.Printf("usage: byLine <file1> [<file2> ...]\n")
+		fmt.Printf("usage: byCharacter <file1> [<file2> ...]\n")
 		return
 	}
+
 	for _, file := range args[1:] {
-		err := lineByLine(file)
+		err := charByChar(file)
 		if err != nil {
 			fmt.Println(err)
 		}
 	}
-
 }
