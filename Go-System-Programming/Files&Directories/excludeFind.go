@@ -7,12 +7,23 @@ import (
 	"path/filepath"
 )
 
-func main11() {
+func excludeName0(name string, exclude string) bool {
+	if exclude == "" {
+		return false
+	}
+	if filepath.Base(name) == exclude {
+		return true
+	}
+	return false
+}
+
+func main12() {
 	minusS := flag.Bool("s", false, "Sockets")
 	minusP := flag.Bool("p", false, "Pipes")
 	minusSL := flag.Bool("sl", false, "Symbolic Links")
 	minusD := flag.Bool("d", false, "Directories")
 	minusF := flag.Bool("f", false, "Files")
+	minusX := flag.String("x", "", "Files")
 
 	flag.Parse()
 	flags := flag.Args()
@@ -33,6 +44,10 @@ func main11() {
 	Path := flags[0]
 
 	walkFunction := func(path string, info os.FileInfo, err error) error {
+		if excludeName0(path, *minusX) {
+			return nil
+		}
+
 		fileInfo, err := os.Stat(path)
 		if err != nil {
 			return err

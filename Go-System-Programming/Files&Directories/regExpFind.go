@@ -5,14 +5,54 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strings"
 )
 
-func main11() {
+func regularExpression(path, regExp string) bool {
+	if regExp == "" {
+		return true
+	}
+
+	r, _ := regexp.Compile(regExp)
+	matched := r.MatchString(path)
+	return matched
+}
+
+func excludeExtensions(name string, extension string) bool {
+	if extension == "" {
+		return false
+	}
+
+	basename := filepath.Base(name)
+	s := strings.Split(basename, ".")
+	length := len(s)
+	basenameExtension := s[length-1]
+	if basenameExtension == extension {
+		return true
+	}
+	return false
+}
+
+func excludeName(name string, exclude string) bool {
+	if exclude == "" {
+		return false
+	}
+	if filepath.Base(name) == exclude {
+		return true
+	}
+	return false
+}
+
+func main() {
 	minusS := flag.Bool("s", false, "Sockets")
 	minusP := flag.Bool("p", false, "Pipes")
 	minusSL := flag.Bool("sl", false, "Symbolic Links")
 	minusD := flag.Bool("d", false, "Directories")
 	minusF := flag.Bool("f", false, "Files")
+	minusX := flag.String("x", "", "Files")
+	minusEXT := flag.String("ext", "", "Extensions")
+	minusRE := flag.String("re", "", "Regular Expression")
 
 	flag.Parse()
 	flags := flag.Args()
@@ -33,6 +73,18 @@ func main11() {
 	Path := flags[0]
 
 	walkFunction := func(path string, info os.FileInfo, err error) error {
+		if regularExpression(path, *minusRE) == false {
+			return nil
+		}
+
+		if excludeExtensions(path, *minusEXT) {
+			return nil
+		}
+
+		if excludeName(path, *minusX) {
+			return nil
+		}
+
 		fileInfo, err := os.Stat(path)
 		if err != nil {
 			return err
