@@ -17,6 +17,7 @@ func writeToFile(s []byte, path string) error {
 	if err != nil {
 		return err
 	}
+
 	defer fd.Close()
 	n, err := fd.Write(s)
 	if err != nil {
@@ -29,13 +30,13 @@ func writeToFile(s []byte, path string) error {
 func main10() {
 	arguments := os.Args
 	if len(arguments) == 1 {
-		fmt.Println("Print select 1|2")
+		fmt.Println("Print selcet 1|2")
 		return
 	}
 	fmt.Println("f1:", len(f1), "f2:", len(f2))
 	switch arguments[1] {
 	case "1":
-		filename := "/tmp/temporary.png"
+		filename := "./static/temporary.png"
 		err := writeToFile(f1, filename)
 		if err != nil {
 			fmt.Println(err)
@@ -46,4 +47,5 @@ func main10() {
 	default:
 		fmt.Println("Not a valid option!")
 	}
+
 }

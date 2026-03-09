@@ -8,7 +8,6 @@ import (
 
 func GetSize(path string) (int64, error) {
 	contents, err := os.ReadDir(path)
-	fmt.Println(contents)
 	if err != nil {
 		return -1, err
 	}
@@ -58,6 +57,5 @@ func main12() {
 		fmt.Println(err)
 		return
 	}
-
 	fmt.Println("Total Size:", i)
 }

@@ -7,21 +7,21 @@ import (
 	"math/rand"
 )
 
-type Data struct {
+type Dataa struct {
 	Key string `json:"key"`
-	Val int    `json:"value"`
+	Val int    `jsno:"value"`
 }
 
-var DataRecords []Data
+var DataaRecords []Dataa
 
-func random(min, max int) int {
+func randomData(min, max int) int {
 	return rand.Intn(max-min) + min
 }
 
-var MIN = 0
-var MAX = 26
+var MINN = 0
+var MAXX = 26
 
-func getString(l int64) string {
+func getStringg(l int64) string {
 	startChar := "A"
 	temp := ""
 	var i int64 = 1
@@ -50,7 +50,6 @@ func JSONstream(data interface{}) (string, error) {
 	buffer := new(bytes.Buffer)
 	encoder := json.NewEncoder(buffer)
 	encoder.SetIndent("", "\t")
-
 	err := encoder.Encode(data)
 	if err != nil {
 		return "", err
@@ -59,6 +58,7 @@ func JSONstream(data interface{}) (string, error) {
 }
 
 func main9() {
+	// Create random records
 	var i int
 	var t Data
 	for i = 0; i < 2; i++ {

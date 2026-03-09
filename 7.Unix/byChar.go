@@ -12,34 +12,32 @@ func charByChar(file string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
 
+	defer f.Close()
 	r := bufio.NewReader(f)
 	for {
 		line, err := r.ReadString('\n')
 		if err == io.EOF {
-			if len(line) != 0 {
-				for _, x := range line {
-					fmt.Println(string(x))
-				}
+			for _, c := range line {
+				fmt.Println(string(c))
 			}
 			break
-		} else if err != nil {
-			fmt.Printf("Error reading file %s", err)
+		}
+		if err != nil {
 			return err
 		}
-
-		for _, x := range line {
-			fmt.Println(string(x))
+		for _, c := range line {
+			fmt.Println(string(c))
 		}
 	}
+
 	return nil
 }
 
 func main3() {
 	args := os.Args
 	if len(args) == 1 {
-		fmt.Printf("usage: byCharacter <file1> [<file2> ...]\n")
+		fmt.Printf("usage: byChar <file1> [<file2> ...]\n")
 		return
 	}
 

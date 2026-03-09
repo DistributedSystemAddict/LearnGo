@@ -9,5 +9,5 @@ import (
 var src string
 
 func main11() {
-	fmt.Println(src)
+	fmt.Print(src)
 }

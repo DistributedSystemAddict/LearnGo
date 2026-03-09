@@ -9,23 +9,23 @@ import (
 )
 
 type ConfigStructure struct {
-	MacPass     string `mapstructure:"macos"`
-	LinuxPass   string `mapstructure:"linux"`
-	WindowsPass string `mapstructure:"windows"`
-	PostHost    string `mapstructure:"postgres"`
-	MySQLHost   string `mapstructure:"mysql"`
-	MongoHost   string `mapstructure:"mongodb"`
+	MacPass    string `mapstructure:"macos"`
+	LinuxPass  string `mapstructure:"linux"`
+	WindowPass string `mapstructure:"windows"`
+	PostHost   string `mapstructure:"postgres"`
+	MySQLHost  string `mapstructure:"mysql"`
+	MongoHost  string `mapstructure:"mongodb"`
 }
 
-var CONFIG = ".config.json"
-
 func PrettyPrint(v interface{}) (err error) {
-	b, err := json.MarshalIndent(v, "", "  ")
+	b, err := json.MarshalIndent(v, "", " ")
 	if err == nil {
 		fmt.Println(string(b))
 	}
 	return
 }
+
+var CONFIG = ".config.json"
 
 func main() {
 	if len(os.Args) == 1 {
@@ -36,13 +36,15 @@ func main() {
 
 	viper.SetConfigType("json")
 	viper.SetConfigFile(CONFIG)
-	fmt.Printf("Using config: %s\n", viper.ConfigFileUsed())
-	viper.ReadInConfig()
+	fmt.Printf("Using config: %s\n", viper.ConfigFileUsed()) //trả về đường dẫn file config mà Viper đã load.
+	viper.ReadInConfig()                                     //thực sự đọc file config vào memory.
+
 	if viper.IsSet("macos") {
 		fmt.Println("macos:", viper.Get("macos"))
 	} else {
 		fmt.Println("macos not set!")
 	}
+
 	if viper.IsSet("active") {
 		value := viper.GetBool("active")
 		if value {

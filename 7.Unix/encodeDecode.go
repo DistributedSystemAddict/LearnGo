@@ -11,21 +11,22 @@ type UseAll struct {
 	Year    int    `json:"created"`
 }
 
-func main7() {
-	useall := UseAll{Name: "Mike", Surname: "Tsoukalos", Year: 2023}
-	t, err := json.Marshal(&useall)
-
+func main6() {
+	useAll := UseAll{
+		Name:    "Mike",
+		Surname: "Tsoukalos",
+		Year:    2020,
+	}
+	t, err := json.Marshal(&useAll)
 	if err != nil {
 		fmt.Println(err)
 	} else {
 		fmt.Printf("Value %s\n", t)
 	}
-
 	str := `{"username": "M.", "surname": "Ts", "created":2024}`
 	jsonRecord := []byte(str)
 	temp := UseAll{}
 	err = json.Unmarshal(jsonRecord, &temp)
-
 	if err != nil {
 		fmt.Println(err)
 	} else {

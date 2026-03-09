@@ -10,6 +10,7 @@ type S1 struct {
 	F1 int
 	F2 string
 }
+
 type S2 struct {
 	F1   S1
 	text []byte
@@ -17,28 +18,32 @@ type S2 struct {
 
 func (s *S1) Read(p []byte) (n int, err error) {
 	fmt.Print("Give me your name: ")
-	fmt.Scanln(&p)
+	fmt.Scanln(&p) // p it not buf when run that
 	s.F2 = string(p)
 	return len(p), nil
 }
+
 func (s *S1) Write(p []byte) (n int, err error) {
 	if s.F1 < 0 {
 		return -1, nil
 	}
 	for i := 0; i < s.F1; i++ {
-		fmt.Printf("%s ", p)
+		fmt.Printf("%s", p)
 	}
 	fmt.Println()
 	return s.F1, nil
 }
+
 func (s S2) eof() bool {
 	return len(s.text) == 0
 }
+
 func (s *S2) readByte() byte {
 	temp := s.text[0]
 	s.text = s.text[1:]
 	return temp
 }
+
 func (s *S2) Read(p []byte) (n int, err error) {
 	if s.eof() {
 		err = io.EOF
@@ -57,7 +62,8 @@ func (s *S2) Read(p []byte) (n int, err error) {
 	}
 	return n, nil
 }
-func main0() {
+
+func main1() {
 	s1var := S1{4, "Hello"}
 	fmt.Println(s1var)
 	buf := make([]byte, 2)
@@ -67,6 +73,7 @@ func main0() {
 		return
 	}
 	fmt.Println("Read:", s1var.F2)
+	fmt.Println(buf)
 	_, _ = s1var.Write([]byte("Hello There!"))
 	s2var := S2{F1: s1var, text: []byte("Hello world!!")}
 	r := bufio.NewReader(&s2var)
@@ -78,6 +85,6 @@ func main0() {
 			fmt.Println("*", err)
 			break
 		}
-		fmt.Println("*", n, string(buf[:n]))
+		fmt.Println("**", n, string(buf[:n]))
 	}
 }

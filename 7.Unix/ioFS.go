@@ -66,7 +66,7 @@ func writeToFile1(s []byte, path string) error {
 	return nil
 }
 
-func main() {
+func main13() {
 	// At this point we do not know what is included in ./static
 
 	// List all files
@@ -92,7 +92,7 @@ func main() {
 	}
 
 	// Save it to an actual file
-	writeToFile(buffer, "/tmp/IOFS.txt")
+	writeToFile1(buffer, "./static/IOFS.txt")
 	if err != nil {
 		fmt.Println(err)
 		return

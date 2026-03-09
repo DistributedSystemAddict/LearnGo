@@ -12,7 +12,9 @@ func lineByLine(file string) error {
 	if err != nil {
 		return err
 	}
+
 	defer f.Close()
+
 	r := bufio.NewReader(f)
 	for {
 		line, err := r.ReadString('\n')
@@ -22,6 +24,7 @@ func lineByLine(file string) error {
 			}
 			break
 		}
+
 		if err != nil {
 			fmt.Printf("error reading file %s", err)
 			return err
@@ -30,17 +33,18 @@ func lineByLine(file string) error {
 	}
 	return nil
 }
-func main1() {
+
+func main2() {
 	args := os.Args
 	if len(args) == 1 {
 		fmt.Printf("usage: byLine <file1> [<file2> ...]\n")
 		return
 	}
+
 	for _, file := range args[1:] {
 		err := lineByLine(file)
 		if err != nil {
 			fmt.Println(err)
 		}
 	}
-
 }

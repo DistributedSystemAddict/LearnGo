@@ -8,18 +8,16 @@ import (
 )
 
 func readSize(f *os.File, size int) []byte {
-	buffer := make([]byte, size)
-	n, err := f.Read(buffer)
-
+	buf := make([]byte, size)
+	n, err := f.Read(buf)
 	if err == io.EOF {
 		return nil
 	}
-
 	if err != nil {
-		fmt.Print(err)
+		fmt.Println(err)
 		return nil
 	}
-	return buffer[0:n]
+	return buf[0:n]
 }
 
 func main5() {
@@ -41,8 +39,8 @@ func main5() {
 		fmt.Println(err)
 		return
 	}
-
 	defer f.Close()
+
 	readData := readSize(f, bufferSize)
 	if readData != nil {
 		fmt.Print(string(readData))

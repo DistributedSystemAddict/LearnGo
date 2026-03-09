@@ -44,7 +44,7 @@ func excludeName(name string, exclude string) bool {
 	return false
 }
 
-func main() {
+func main14() {
 	minusS := flag.Bool("s", false, "Sockets")
 	minusP := flag.Bool("p", false, "Pipes")
 	minusSL := flag.Bool("sl", false, "Symbolic Links")
