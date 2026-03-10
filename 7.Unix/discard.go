@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func main() {
+func main15() {
 	if len(os.Args) == 1 {
 		log.Println("Enabling logging!")
 		log.SetOutput(os.Stderr)
