@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func main() {
+func main19() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: go run byCharacter.go <filename>")
 		return

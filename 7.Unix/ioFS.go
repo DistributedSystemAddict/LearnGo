@@ -92,7 +92,7 @@ func main13() {
 	}
 
 	// Save it to an actual file
-	writeToFile1(buffer, "./static/IOFS.txt")
+	err = writeToFile1(buffer, "./static/IOFS.txt")
 	if err != nil {
 		fmt.Println(err)
 		return

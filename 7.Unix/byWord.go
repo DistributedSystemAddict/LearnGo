@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"io"
 	"os"
 	"regexp"
 )
@@ -14,27 +13,36 @@ func wordByWord(file string) error {
 		return err
 	}
 	defer f.Close()
-	r := bufio.NewReader(f)
-	re := regexp.MustCompile("[^\\s]+")
-	for {
-		line, err := r.ReadString('\n')
-		if err == io.EOF {
-			if len(line) != 0 {
-				words := re.FindAllString(line, -1)
-				for i := 0; i < len(words); i++ {
-					fmt.Println(words[i])
-				}
-			}
-			break
-		} else if err != nil {
-			fmt.Printf("error reading file %s", err)
-			return err
-		}
+	//r := bufio.NewReader(f)
+	re := regexp.MustCompile(`[^,]+`)
+
+	scanner := bufio.NewScanner(f)
+	for scanner.Scan() {
+		line := scanner.Text()
 		words := re.FindAllString(line, -1)
 		for i := 0; i < len(words); i++ {
 			fmt.Println(words[i])
 		}
 	}
+	// for {
+	// 	line, err := r.ReadString('\n')
+	// 	if err == io.EOF {
+	// 		if len(line) != 0 {
+	// 			words := re.FindAllString(line, -1)
+	// 			for i := 0; i < len(words); i++ {
+	// 				fmt.Println(words[i])
+	// 			}
+	// 		}
+	// 		break
+	// 	} else if err != nil {
+	// 		fmt.Printf("error reading file %s", err)
+	// 		return err
+	// 	}
+	// 	words := re.FindAllString(line, -1)
+	// 	for i := 0; i < len(words); i++ {
+	// 		fmt.Println(words[i])
+	// 	}
+	// }
 	return nil
 }
 
