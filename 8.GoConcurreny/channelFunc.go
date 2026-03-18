@@ -21,7 +21,7 @@ func f2(out <-chan int, in chan<- int) {
 	in <- x
 }
 
-func main() {
+func main9() {
 	c := make(chan int)
 	go writeToChannel1(c, 10)
 	time.Sleep(1 * time.Second)
