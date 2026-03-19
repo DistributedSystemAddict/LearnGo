@@ -32,7 +32,7 @@ func monitor() {
 	}
 }
 
-func main() {
+func main24() {
 	if len(os.Args) != 2 {
 		fmt.Println("Please give an integer!")
 		return

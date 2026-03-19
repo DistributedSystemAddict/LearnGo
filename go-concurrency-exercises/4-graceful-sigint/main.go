@@ -13,10 +13,43 @@
 
 package main
 
+import (
+	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+)
+
+var wg sync.WaitGroup
+
 func main() {
 	// Create a process
 	proc := MockProcess{}
 
 	// Run the process (blocking)
-	proc.Run()
+	go proc.Run()
+
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs, syscall.SIGINT)
+	graceful := false
+	wg.Add(2)
+	go func() {
+		for {
+			sig := <-sigs
+			fmt.Println("\nreceived signal:", sig)
+
+			if !graceful {
+				wg.Done()
+				graceful = true
+				go proc.Stop() // gọi graceful stop
+			} else {
+				wg.Done()
+				fmt.Println("force exit!")
+				os.Exit(1)
+			}
+		}
+	}()
+
+	wg.Wait()
 }
