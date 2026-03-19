@@ -13,7 +13,7 @@ func function() {
 	fmt.Println("Locked!")
 }
 
-func main() {
+func main21() {
 	w.Add(1)
 	go func() {
 		defer w.Done()
