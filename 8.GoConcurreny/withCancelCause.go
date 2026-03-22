@@ -10,7 +10,7 @@ import (
 
 var wg3 sync.WaitGroup
 
-func main() {
+func main27() {
 	ctx := context.Background()
 	ctx, cancel := context.WithCancelCause(ctx)
 	wg3.Add(1)
