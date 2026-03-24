@@ -25,7 +25,7 @@ func (s *SymbolicStack) Pop() string {
 	return val
 }
 
-func main() {
+func main4() {
 	// Bytecode mẫu: If (storage[0] > 1) { storage[1] = 20 } else { storage[1] = 10 }
 	bytecodeHex := "600160005411600f57600a600155005b601460015500"
 	bytecode, err := hex.DecodeString(bytecodeHex)

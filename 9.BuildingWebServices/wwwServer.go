@@ -17,6 +17,7 @@ func timeHandler(w http.ResponseWriter, r *http.Request) {
 	Body := "The current time is:"
 	fmt.Fprintf(w, "<h1 align=\"center\">%s</h1>", Body)
 	fmt.Fprintf(w, "<h2 align=\"center\">%s</h2>\n", t)
+
 	fmt.Fprintf(w, "Serving: %s\n", r.URL.Path)
 	fmt.Printf("Served time for: %s\n", r.Host)
 }
@@ -28,8 +29,10 @@ func main1() {
 		PORT = ":" + arguments[1]
 	}
 	fmt.Println("Using port number: ", PORT)
+
 	http.HandleFunc("/time", timeHandler)
 	http.HandleFunc("/", myHandler)
+
 	err := http.ListenAndServe(PORT, nil)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
