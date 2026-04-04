@@ -24,8 +24,9 @@ func main() {
 
 	tryDir := func(dirName string, dir *int32, out *bytes.Buffer) bool { // <1>
 		fmt.Fprintf(out, " %v", dirName)
-		atomic.AddInt32(dir, 1) // <2>
+		// atomic.AddInt32(dir, 1) // <2> // If use this, we can cause livelocks
 		takeStep()              // <3>
+		atomic.AddInt32(dir, 1) // <2> // Fix
 		if atomic.LoadInt32(dir) == 1 {
 			fmt.Fprint(out, ". Success!")
 			return true
@@ -34,6 +35,7 @@ func main() {
 		atomic.AddInt32(dir, -1) // <4>
 		return false
 	}
+
 	var left, right int32
 	tryLeft := func(out *bytes.Buffer) bool { return tryDir("left", &left, out) }
 	tryRight := func(out *bytes.Buffer) bool { return tryDir("right", &right, out) }
@@ -49,6 +51,7 @@ func main() {
 		}
 		fmt.Fprintf(&out, "\n%v tosses her hands up in exasperation!", name)
 	}
+
 	var peopleInHallway sync.WaitGroup // <3>
 	peopleInHallway.Add(2)
 	go walk(&peopleInHallway, "Alice")

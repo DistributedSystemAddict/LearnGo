@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"sync"
-	"time"
 )
 
 func main() {
@@ -15,7 +14,6 @@ func main() {
 		memoryAccess.Unlock()
 	}()
 
-	time.Sleep(1 * time.Second)
 	memoryAccess.Lock()
 	if value == 0 {
 		fmt.Printf("the value is %v.\n", value)
